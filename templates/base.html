@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Planner</title>
+    <meta name="description" content="AI-assisted smart planner to manage your syllabus.">
+    <!-- Switch to a much more modern, premium font: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Cache bust the CSS to immediately apply your beautiful new UI -->
+    <link rel="stylesheet" href="/static/css/style.css?v=2">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">✦ NeuroPlan AI</div>
+        <ul class="nav-links">
+            <li><a href="/">Syllabus AI</a></li>
+            <li><a href="/schedule_view">Daily Plan</a></li>
+            <li><a href="/progress_view">Progress Tracker</a></li>
+        </ul>
+    </nav>
+    <div class="container fade-in">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <script src="/static/js/app.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="header-section">
+    <h1>Supercharge Your Focus</h1>
+    <p>Let AI analyze your syllabus and build the perfect trajectory to crush your exams. No anxiety, just action.</p>
+</div>
+
+<div class="grid-layout">
+    <!-- Subject Form -->
+    <div class="form-card glass-panel">
+        <h2>📚 Add Subject</h2>
+        <form id="subjectForm">
+            <div class="input-group">
+                <label>Subject Topic/Name</label>
+                <input type="text" id="subjectName" required placeholder="e.g., Quantum Physics">
+            </div>
+            <div class="input-group">
+                <label>Target Exam Date</label>
+                <input type="date" id="examDate" required>
+            </div>
+            <div class="input-group">
+                <label>Daily Allocated Hours</label>
+                <input type="number" id="dailyHours" step="0.5" required placeholder="e.g., 2.5">
+            </div>
+            <button type="submit" class="btn primary-btn">Save Knowledge Domain</button>
+        </form>
+    </div>
+
+    <!-- Topic Form -->
+    <div class="form-card glass-panel">
+        <h2>⚡ Expand Topics</h2>
+        <form id="topicForm">
+            <div class="input-group">
+                <label>Belongs to Subject</label>
+                <select id="topicSubjectId" required>
+                    <!-- Populated by JS -->
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Topic Concept</label>
+                <input type="text" id="topicName" required placeholder="e.g., String Theory Basics">
+            </div>
+            <div class="input-group">
+                <label>Cognitive Load</label>
+                <select id="topicDifficulty" required>
+                    <option value="1">Level 1 - Light Reading</option>
+                    <option value="2">Level 2 - Deep Focus</option>
+                    <option value="3">Level 3 - Heavy Synthesis</option>
+                </select>
+            </div>
+            <button type="submit" class="btn secondary-btn">Link Concept</button>
+        </form>
+    </div>
+</div>
+
+<div class="action-panel">
+    <!-- Breathtaking AI generate button -->
+    <button id="generateScheduleBtn" class="btn super-btn transition-transform">✨ Ignite AI Engine ✨</button>
+    <p id="generateMsg" style="margin-top: 20px; color: #66FCF1; font-weight: 500; font-size: 1.1rem;"></p>
+</div>
+{% endblock %}
