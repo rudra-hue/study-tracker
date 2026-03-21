@@ -95,6 +95,7 @@ def mark_schedule_complete(schedule_id):
     conn.commit()
     return jsonify({"message": "Task marked as complete! Great job!"})
 
+database.init_db() # Ensure DB is robust on boot
+
 if __name__ == '__main__':
-    database.init_db() # Ensure DB is robust on boot
     app.run(debug=True, port=5000)
