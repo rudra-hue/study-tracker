@@ -25,13 +25,13 @@ def generate_schedule():
     
     today = datetime.now().date()
     
-    # Fetch all pending topics, prioritizing hard topics to tackle them early
+    # Fetch all pending topics, prioritizing closest exams and hard topics
     cursor.execute("""
         SELECT t.id, t.subject_id, t.name, t.difficulty, t.estimated_hours, s.exam_date 
         FROM topics t 
         JOIN subjects s ON t.subject_id = s.id 
         WHERE t.status = 'Pending'
-        ORDER BY t.difficulty DESC
+        ORDER BY s.exam_date ASC, t.difficulty DESC
     """)
     topics = [dict(row) for row in cursor.fetchall()]
     
@@ -58,8 +58,16 @@ def generate_schedule():
             if daily_assigned_hours >= global_daily_limit:
                 break
             
-            # Avoid monotony by switching subjects if possible
-            if topic['subject_id'] in assigned_subjects_today and len(set(t['subject_id'] for t in unassigned_topics)) > 1:
+            exam_date_str = topic.get('exam_date')
+            exam_date = datetime.strptime(exam_date_str, '%Y-%m-%d').date() if exam_date_str else None
+            is_urgent = False
+            if exam_date:
+                days_until_exam = (exam_date - current_date).days
+                if days_until_exam <= 3:
+                     is_urgent = True
+
+            # Avoid monotony by switching subjects if possible, dropping this rule if exam is urgent
+            if not is_urgent and topic['subject_id'] in assigned_subjects_today and len(set(t['subject_id'] for t in unassigned_topics)) > 1:
                 continue
             
             # If a topic pushes us slightly over the limit, attach it cautiously unless it's huge
@@ -75,9 +83,14 @@ def generate_schedule():
             })
             
             # Smart Feature: Spaced Repetition! (Revise at day+3 and day+7)
-            # Revisions are marked but don't strictly consume heavy hours in the algorithm
-            schedule_plan.append({'date': (current_date + timedelta(days=3)).strftime('%Y-%m-%d'), 'topic_id': topic['id'], 'is_revision': True})
-            schedule_plan.append({'date': (current_date + timedelta(days=7)).strftime('%Y-%m-%d'), 'topic_id': topic['id'], 'is_revision': True})
+            # Only add revisions if they fall before the exam date (or if there is no exam date)
+            rev1_date = current_date + timedelta(days=3)
+            if not exam_date or rev1_date < exam_date:
+                schedule_plan.append({'date': rev1_date.strftime('%Y-%m-%d'), 'topic_id': topic['id'], 'is_revision': True})
+                
+            rev2_date = current_date + timedelta(days=7)
+            if not exam_date or rev2_date < exam_date:
+                schedule_plan.append({'date': rev2_date.strftime('%Y-%m-%d'), 'topic_id': topic['id'], 'is_revision': True})
             
             daily_assigned_hours += topic['estimated_hours']
             assigned_subjects_today.add(topic['subject_id'])
