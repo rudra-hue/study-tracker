@@ -146,6 +146,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadSchedule();
             }
         };
+
+        const clearCompletedBtn = document.getElementById('clearCompletedBtn');
+        if (clearCompletedBtn) {
+            clearCompletedBtn.addEventListener('click', async () => {
+                if (confirm('Are you sure you want to remove completed tasks from your schedule?')) {
+                    const result = await fetchAPI('/api/schedule/clear-completed', { method: 'DELETE' });
+                    if (result) {
+                        alert(result.message);
+                        loadSchedule();
+                    }
+                }
+            });
+        }
+
+        const clearProgressBtn = document.getElementById('clearProgressBtn');
+        if (clearProgressBtn) {
+            clearProgressBtn.addEventListener('click', async () => {
+                if (confirm('WARNING: Are you sure you want to reset all your progress?')) {
+                    const result = await fetchAPI('/api/progress/clear', { method: 'PUT' });
+                    if (result) {
+                        alert(result.message);
+                        loadSchedule();
+                    }
+                }
+            });
+        }
     }
 
     // --- PAGE: PROGRESS VIEW ---
@@ -177,5 +203,18 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         loadProgress();
+
+        const clearProgressBtnProgressPage = document.getElementById('clearProgressBtnProgressPage');
+        if (clearProgressBtnProgressPage) {
+            clearProgressBtnProgressPage.addEventListener('click', async () => {
+                if (confirm('WARNING: Are you sure you want to reset all your progress?')) {
+                    const result = await fetchAPI('/api/progress/clear', { method: 'PUT' });
+                    if (result) {
+                        alert(result.message);
+                        loadProgress();
+                    }
+                }
+            });
+        }
     }
 });

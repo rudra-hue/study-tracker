@@ -83,6 +83,7 @@ body::after {
     letter-spacing: -0.5px;
     background: var(--accent-glow);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     display: flex;
     align-items: center;
@@ -143,6 +144,7 @@ body::after {
     line-height: 1.2;
     background: linear-gradient(135deg, #FFFFFF, #A78BFA);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -354,3 +356,62 @@ body::after {
 .badge { padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; }
 .badge.pending { background: rgba(244, 63, 94, 0.1); color: #F43F5E; box-shadow: 0 0 0 1px #F43F5E; }
 .badge.done { background: rgba(16, 185, 129, 0.1); color: #10B981; box-shadow: 0 0 0 1px #10B981; }
+
+/* Mobile Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 1.5rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .header-section h1 {
+        font-size: 2.5rem;
+    }
+
+    .grid-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .task-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+    }
+    
+    .task-card > div:last-child {
+        align-self: flex-start;
+        width: 100%;
+    }
+    
+    .task-card > div:last-child button {
+        width: 100%;
+    }
+
+    .status-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        text-align: left;
+    }
+    
+    .status-row > div {
+        width: 100%;
+        text-align: left !important;
+    }
+    
+    .header-section > div[style*="justify-content: center"] {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        width: 100%;
+    }
+}

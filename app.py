@@ -84,16 +84,36 @@ def mark_schedule_complete(schedule_id):
     conn = database.get_connection()
     cursor = conn.cursor()
     
-    cursor.execute("UPDATE schedule SET is_completed = TRUE WHERE id = ?", (schedule_id,))
+    cursor.execute("UPDATE schedule SET is_completed = 1 WHERE id = ?", (schedule_id,))
     
     # Smart Recalculation Trigger logic: mark topic complete if it's the main study task
     cursor.execute("""
         UPDATE topics SET status = 'Completed' 
-        WHERE id = (SELECT topic_id FROM schedule WHERE id = ? AND is_revision = FALSE)
+        WHERE id = (SELECT topic_id FROM schedule WHERE id = ? AND is_revision = 0)
     """, (schedule_id,))
     
     conn.commit()
     return jsonify({"message": "Task marked as complete! Great job!"})
+
+@app.route('/api/schedule/clear-completed', methods=['DELETE'])
+def clear_completed_tasks():
+    conn = database.get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM schedule WHERE is_completed = 1")
+    conn.commit()
+    return jsonify({"message": "Completed tasks cleared from schedule!"})
+
+@app.route('/api/progress/clear', methods=['PUT', 'DELETE'])
+def clear_progress():
+    conn = database.get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM schedule")
+    cursor.execute("DELETE FROM topics")
+    cursor.execute("DELETE FROM subjects")
+    # Reset autoincrement sequence optional but clean
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name IN ('schedule', 'topics', 'subjects')")
+    conn.commit()
+    return jsonify({"message": "App reset completely! All tasks and progress are wiped!"})
 
 database.init_db() # Ensure DB is robust on boot
 
